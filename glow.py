@@ -62,19 +62,19 @@ class Glow:
     if isinstance(o, dict):
       self.__dict__.update(o)
       if isinstance(self.duration, unicode):
-        self.duration = float(duration)
+        self.duration = float(self.duration)
       if isinstance(self.colour, unicode):
         self.colour = [ int(self.colour[i:i+2], 16) for i in (1, 3, 5) ]
       if isinstance(self.brightness, unicode):
-        self.brightness = float(brightness)
+        self.brightness = float(self.brightness)
       if isinstance(self.power, unicode):
-        self.power = float(power)
+        self.power = float(self.power)
       if isinstance(self.min, unicode):
-        self.min = float(min)
+        self.min = float(self.min)
       if isinstance(self.max, unicode):
-        self.max = float(max)
+        self.max = float(self.max)
       if isinstance(self.delay, unicode):
-        self.delay = float(delay)
+        self.delay = float(self.delay)
 
   def update(self):
 
