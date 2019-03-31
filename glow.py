@@ -62,7 +62,7 @@ class Glow:
     if isinstance(o, dict):
       self.__dict__.update(o)
       if isinstance(self.colour, unicode):
-        self.colour = [ int(self.colour[i:i+2], 16) for i in (2, 4, 6) ]
+        self.colour = [ int(self.colour[i:i+2], 16) for i in (1, 3, 5) ]
 
   def update(self):
 
