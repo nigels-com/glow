@@ -154,12 +154,12 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
 
   # Main event loop - list for HTTP traffic
   try:
-    app.run(host='localhost', port=8080)
+    app.run(host='0.0.0.0', port=8080)
   except:
     blinkt.clear()
     blinkt.show()
 
-# 
+#
 if __name__ == '__main__':
   blinkt.set_clear_on_exit()
   cli()
