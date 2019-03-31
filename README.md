@@ -8,4 +8,4 @@ A Raspberry Pi service for glowing the Pimoroni Blinkt!
 
 http://localhost:8080/
 
-[![index.html](control.png)]
+![index.html](control.png)
