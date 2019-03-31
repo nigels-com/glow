@@ -2,16 +2,13 @@
 
 import time
 import math
+import json
 import random
-import click
-#import thread
 import threading
 import logging
-#1import bottle
 
+import click
 import blinkt
-import json
-
 from bottle import get, post, request, Bottle
 
 logging.basicConfig(level=logging.DEBUG,
@@ -20,22 +17,30 @@ logging.basicConfig(level=logging.DEBUG,
 
 lock = threading.Lock()
 
+#
+# Worker thread for periodic update
+# of Blinkt! LEDs
+#
+
 class Thread(threading.Thread):
 
   def __init__(self, glow):
     threading.Thread.__init__(self)
     self.daemon = True
-    logging.debug('Thread started')
+    logging.debug('Worker thread started')
     self.glow = glow
     self.start()
 
   def run(self):
     while True:
-#     logging.debug('Updated')
       with lock:
         delay = self.glow.delay
         self.glow.update()
       time.sleep(delay)
+
+#
+# Glow state - colour, brightness, waveform
+#
 
 class Glow:
 
@@ -76,38 +81,9 @@ class Glow:
       blinkt.set_pixel(i , colour[0], colour[1], colour[2])
     blinkt.show()
 
-#S = [0, 0, 0, 0, 0, 0.125, 0.25, 1.0, 0.25, 0.125, 0, 0, 0, 0, 0, 0]
-#S = [0, 0, 0, 0, 0.1, 0.2, 0.5, 1.0, 0.5, 0.2, 0.1, 0, 0, 0, 0, 0]
-#S = [0, 0, 0.1, 0.2, 0.5, 1.0, 0.5, 0.2, 0.1, 0, 0]
-
-#start_time = time.time()
-
-#while True:
-    # Sine wave, spends a little longer at min/max
-    # delta = (time.time() - start_time) * 8
-    # offset = int(round(((math.sin(delta) + 1) / 2) * (blinkt.NUM_PIXELS - 1)))
-
-    # Triangle wave, a snappy ping-pong effect
-#    delta = (time.time() - start_time) * 1.0
-
-#    max = len(S) - blinkt.NUM_PIXELS
-#    offset = int(abs(delta%(max*2)))
-#    if offset>=max:
-#       offset = max*2 - offset - 1
-
-#    r = random.randint(0,255)
-#    r = random.randint(0,255) | random.randint(0,255)
-#    print r
-
-
-#    RGB = [255, 255, 0]
-#    RGB = [255, 64, 0]
-#    RGB = [255, 0, 0]
-#    RGB = [192, 192, 255]
-#    for i in range(blinkt.NUM_PIXELS):
-#       blinkt.set_pixel(i , RGB[0]*S[offset + i], RGB[1]*S[offset+i], RGB[2]*S[offset+i])
-#        blinkt.set_pixel(i , RGB[0]*((1<<i)&r != 0), RGB[1]*((1<<i)&r != 0), RGB[2]*((1<<i)&r != 0))
-#        blinkt.set_pixel(i , RGB[0]*s, RGB[1]*s, RGB[2]*s)
+#
+# Glowing LEDs as a CLI or a service
+#
 
 @click.command()
 @click.option('-d', '--duration',            type=float, default=None,  help='Duration')
@@ -149,18 +125,19 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
   if colour:
     glow.colour = colour
 
-#  j = glow.toJson()
-# print('%s'%(j))
-#  glow.fromJson('{"max": 1.0, "colour": [255, 0, 255], "brightness": 1.0, "min": 0.1}')
-#  glow.fromJson('{"max": 1.0, "colour": [255, 0, 255], "brightness": 0.2, "min": 0.1, "duration": 2.0}')
+  thread = Thread(glow)
+
+  # HTTP REST API
 
   app = Bottle()
 
+  # GET glow state as JSON
   @app.get('/')
   def status():
     with lock:
       return '%s\n'%(glow.toJson())
 
+  # POST glow state as JSON
   @app.post('/')
   def status():
     json = request.body.getvalue()
@@ -171,30 +148,16 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
     except:
      pass
 
-#  worker = threading.Thread(target=glow.loop())
   app.glow = glow
-  thread = Thread(glow)
-#  thread.start()
-#  thread.start_new_thread(glow.loop())
 
+  # Main event loop - list for HTTP traffic
   try:
     app.run(host='localhost', port=8080)
   except:
     blinkt.clear()
     blinkt.show()
 
-#  run(host='localhost', port=8080)
-
-
-#  while True:
-#    time.sleep(1)
-
-#    logging.debug('Waiting')
-#    glow.update()
-#    with lock:
-#    logging.debug('Waiting')
-#      print('%s'%(glow.toJson()))
-
+# 
 if __name__ == '__main__':
   blinkt.set_clear_on_exit()
   cli()
