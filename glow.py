@@ -146,10 +146,51 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
   app = Bottle()
 
   # GET glow state as JSON
-  @app.get('/')
+  @app.get('/glow.json')
   def status():
     with lock:
       return '%s\n'%(glow.toJson())
+
+  # GET glow state as JSON
+  @app.get('/index.html')
+  def index():
+    return '''
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+</style>
+  <title>GLOW</title>
+</head>
+<body>
+  <table>
+    <tr><td>Duration</td>  <td><input type="text"   id="duration"   value=""></td><td>(sec)</td></tr>
+    <tr><td>Colour</td>    <td><input type="color"  id="colour"     value=""></td></tr>
+    <tr><td>Brightness</td><td><input type="text"   id="brightness" value=""></td><td>[0.0,1.0]</td></tr>
+    <tr><td>Power</td>     <td><input type="text"   id="power"      value=""></td><td>&gt;0.0</td></tr>
+    <tr><td>Min</td>       <td><input type="text"   id="min"        value=""></td><td>[0.0,1.0]</td></tr>
+    <tr><td>Max</td>       <td><input type="text"   id="max"        value=""></td><td>[0.0,1.0]</td></tr>
+  </table>
+  <br>
+  <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+  <script type="text/javascript">
+
+    var state = {}
+
+//    jQuery.ajaxSetup({async:false});
+//    $.getJSON( "http://10.0.0.23:8080/", {_: new Date().getTime()}, function( data ) { state = data; });
+//    jQuery.ajaxSetup({async:true});
+
+    $("#duration")  .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ duration: this.value })); });
+    $("#colour")    .change(function(){                        $.post("/", JSON.stringify({ colour: this.value })); });
+    $("#brightness").change(function(){ if (this.value.length) $.post("/", JSON.stringify({ brightness: this.value })); });
+    $("#power")     .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ power: this.value })); });
+    $("#min")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ min: this.value })); });
+    $("#max")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ max: this.value })); });
+</script>
+</body>
+</html>
+'''
 
   # POST glow state as JSON
   @app.post('/')
