@@ -211,11 +211,11 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
         $("#min")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ min: this.value })); });
         $("#max")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ max: this.value })); });
 
-        $("#black")     .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#000" })); });
-        $("#red")       .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#f00" })); });
-        $("#green")     .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#0f0" })); });
-        $("#blue")      .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#00f" })); });
-        $("#white")     .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#fff" })); });
+        $("#black")     .click(function(){ $.post("/", JSON.stringify({ colour: "#000" })); });
+        $("#red")       .click(function(){ $.post("/", JSON.stringify({ colour: "#f00" })); });
+        $("#green")     .click(function(){ $.post("/", JSON.stringify({ colour: "#0f0" })); });
+        $("#blue")      .click(function(){ $.post("/", JSON.stringify({ colour: "#00f" })); });
+        $("#white")     .click(function(){ $.post("/", JSON.stringify({ colour: "#fff" })); });
     });
 </script>
 </body>
