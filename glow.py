@@ -61,6 +61,8 @@ class Glow:
     o = json.loads(str)
     if isinstance(o, dict):
       self.__dict__.update(o)
+      if isinstance(self.colour, string):
+        self.colour = [ int(h[i:i+2], 16) for i in (0, 2, 4) ]
 
   def update(self):
 
