@@ -58,7 +58,7 @@ class Glow:
   def toJson(self):
     o = {}
     o["duration"] = self.duration
-    o["colour"] = webcolors.hex_to_rgb((self.colour[0], self.colour[1], self.colour[2])) 
+    o["colour"] = webcolors.rgb_to_hex((self.colour[0], self.colour[1], self.colour[2])) 
     o["brightness"] = self.brightness
     o["power"] = self.power
     o["min"] = self.min
