@@ -9,6 +9,7 @@ import logging
 
 import click
 import blinkt
+import webcolors
 from bottle import get, post, request, Bottle
 
 logging.basicConfig(level=logging.DEBUG,
@@ -55,7 +56,15 @@ class Glow:
     self.delay = 0.1
 
   def toJson(self):
-    return json.dumps(self.__dict__)
+    o = {}
+    o["duration"] = self.duration
+    o["colour"] = webcolors.hex_to_rgb((self.colour[0], self.colour[1], self.colour[2])) 
+    o["brightness"] = self.brightness
+    o["power"] = self.power
+    o["min"] = self.min
+    o["max"] = self.max
+    o["delay"] = self.delay
+    return json.dumps(o)
 
   def fromJson(self, str):
     o = json.loads(str)
@@ -64,7 +73,8 @@ class Glow:
       if isinstance(self.duration, unicode):
         self.duration = float(self.duration)
       if isinstance(self.colour, unicode):
-        self.colour = [ int(self.colour[i:i+2], 16) for i in (1, 3, 5) ]
+        rgb = webcolors.hex_to_rgb(self.colour) 
+        self.colour = [ rgb[0], rgb[1], rgb[2] ]
       if isinstance(self.brightness, unicode):
         self.brightness = float(self.brightness)
       if isinstance(self.power, unicode):
@@ -173,20 +183,38 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
     <tr><td>Max</td>       <td><input type="text"   id="max"        value=""></td><td>[0.0,1.0]</td></tr>
   </table>
   <br>
+      <input type="button" id="black" style="background-color:black;"></input>
+      <input type="button" id="red" style="background-color:red;"></input>
+      <input type="button" id="green" style="background-color:green;"></input>
+      <input type="button" id="blue" style="background-color:blue;"></input>
+      <input type="button" id="white" style="background-color:white;"></input>
+
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript">
 
-//    var state = {}
-//    jQuery.ajaxSetup({async:false});
-//    $.getJSON( "http://10.0.0.23:8080/", {_: new Date().getTime()}, function( data ) { state = data; });
-//    jQuery.ajaxSetup({async:true});
+    jQuery.ajaxSetup({async:false});
+    $.getJSON( "/glow.json", {}, function( data ) { 
+        $("#duration").val(data.duration);
+        $("#colour").val(data.colour);
+        $("#brightness").val(data.brightness);
+        $("#power").val(data.power);
+        $("#min").val(data.min);
+        $("#max").val(data.max);
+    });
+    jQuery.ajaxSetup({async:true});
 
     $("#duration")  .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ duration: this.value })); });
-    $("#colour")    .change(function(){                        $.post("/", JSON.stringify({ colour: this.value })); });
+    $("#colour")    .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: this.value })); });
     $("#brightness").change(function(){ if (this.value.length) $.post("/", JSON.stringify({ brightness: this.value })); });
     $("#power")     .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ power: this.value })); });
     $("#min")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ min: this.value })); });
     $("#max")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ max: this.value })); });
+
+    $("#black")     .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#000" })); });
+    $("#red")       .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#f00" })); });
+    $("#green")     .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#0f0" })); });
+    $("#blue")      .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#00f" })); });
+    $("#white")     .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#fff" })); });
 </script>
 </body>
 </html>
