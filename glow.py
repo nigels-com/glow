@@ -172,7 +172,7 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
     <tr><td>Max</td>       <td><input type="text"   id="max"        value=""></td><td>[0.0,1.0]</td></tr>
   </table>
   <br>
-  <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript">
 
     var state = {}
