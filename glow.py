@@ -203,18 +203,20 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
     });
     jQuery.ajaxSetup({async:true});
 
-    $("#duration")  .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ duration: this.value })); });
-    $("#colour")    .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: this.value })); });
-    $("#brightness").change(function(){ if (this.value.length) $.post("/", JSON.stringify({ brightness: this.value })); });
-    $("#power")     .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ power: this.value })); });
-    $("#min")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ min: this.value })); });
-    $("#max")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ max: this.value })); });
+    $(document).ready(function(){
+        $("#duration")  .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ duration: this.value })); });
+        $("#colour")    .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: this.value })); });
+        $("#brightness").change(function(){ if (this.value.length) $.post("/", JSON.stringify({ brightness: this.value })); });
+        $("#power")     .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ power: this.value })); });
+        $("#min")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ min: this.value })); });
+        $("#max")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ max: this.value })); });
 
-    $("#black")     .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#000" })); });
-    $("#red")       .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#f00" })); });
-    $("#green")     .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#0f0" })); });
-    $("#blue")      .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#00f" })); });
-    $("#white")     .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#fff" })); });
+        $("#black")     .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#000" })); });
+        $("#red")       .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#f00" })); });
+        $("#green")     .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#0f0" })); });
+        $("#blue")      .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#00f" })); });
+        $("#white")     .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#fff" })); });
+    }
 </script>
 </body>
 </html>
