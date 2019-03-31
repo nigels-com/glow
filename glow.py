@@ -61,8 +61,20 @@ class Glow:
     o = json.loads(str)
     if isinstance(o, dict):
       self.__dict__.update(o)
+      if isinstance(self.duration, unicode):
+        self.duration = float(duration)
       if isinstance(self.colour, unicode):
         self.colour = [ int(self.colour[i:i+2], 16) for i in (1, 3, 5) ]
+      if isinstance(self.brightness, unicode):
+        self.brightness = float(brightness)
+      if isinstance(self.power, unicode):
+        self.power = float(power)
+      if isinstance(self.min, unicode):
+        self.min = float(min)
+      if isinstance(self.max, unicode):
+        self.max = float(max)
+      if isinstance(self.delay, unicode):
+        self.delay = float(delay)
 
   def update(self):
 
