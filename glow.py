@@ -216,7 +216,7 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
         $("#green")     .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#0f0" })); });
         $("#blue")      .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#00f" })); });
         $("#white")     .click(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: "#fff" })); });
-    }
+    });
 </script>
 </body>
 </html>
