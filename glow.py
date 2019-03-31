@@ -151,7 +151,8 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
     with lock:
       return '%s\n'%(glow.toJson())
 
-  # GET glow state as JSON
+  # GET UI page
+  @app.get('/')
   @app.get('/index.html')
   def index():
     return '''
@@ -175,8 +176,7 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript">
 
-    var state = {}
-
+//    var state = {}
 //    jQuery.ajaxSetup({async:false});
 //    $.getJSON( "http://10.0.0.23:8080/", {_: new Date().getTime()}, function( data ) { state = data; });
 //    jQuery.ajaxSetup({async:true});
