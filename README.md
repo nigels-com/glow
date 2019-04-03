@@ -1,6 +1,6 @@
-# GLOW
+![https://github.com/nigels-com/glow](logo.png)
 
-A Raspberry Pi service for glowing the Pimoroni Blinkt!
+A Raspberry Pi command-line tool and service for glowing the Pimoroni Blinkt!
 
 ## Introduction
 
