@@ -10,7 +10,7 @@ import logging
 import click
 import blinkt
 import webcolors
-from bottle import get, post, request, Bottle
+from bottle import get, post, request, static_file, Bottle
 
 logging.basicConfig(level=logging.DEBUG,
                     format='[%(levelname)s] (%(threadName)-10s) %(message)s',
@@ -58,7 +58,7 @@ class Glow:
   def toJson(self):
     o = {}
     o["duration"] = self.duration
-    o["colour"] = webcolors.rgb_to_hex((self.colour[0], self.colour[1], self.colour[2])) 
+    o["colour"] = webcolors.rgb_to_hex((self.colour[0], self.colour[1], self.colour[2]))
     o["brightness"] = self.brightness
     o["power"] = self.power
     o["min"] = self.min
@@ -73,7 +73,7 @@ class Glow:
       if isinstance(self.duration, unicode):
         self.duration = float(self.duration)
       if isinstance(self.colour, unicode):
-        rgb = webcolors.hex_to_rgb(self.colour) 
+        rgb = webcolors.hex_to_rgb(self.colour)
         self.colour = [ rgb[0], rgb[1], rgb[2] ]
       if isinstance(self.brightness, unicode):
         self.brightness = float(self.brightness)
@@ -161,6 +161,11 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
     with lock:
       return '%s\n'%(glow.toJson())
 
+  # GET glow logo
+  @app.get('/logo.png')
+  def logo():
+    return static_file('logo.png', mimetype='image/png')
+
   # GET UI page
   @app.get('/')
   @app.get('/index.html')
@@ -194,7 +199,7 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
   <script type="text/javascript">
 
     jQuery.ajaxSetup({async:false});
-    $.getJSON( "/glow.json", {}, function( data ) { 
+    $.getJSON( "/glow.json", {}, function( data ) {
         $("#duration").val(data.duration);
         $("#colour").val(data.colour);
         $("#brightness").val(data.brightness);
