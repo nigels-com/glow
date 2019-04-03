@@ -172,8 +172,10 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style></style>
   <title>GLOW</title>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
+  <img src="logo.png"/>
   <table>
     <tr><td>Duration</td>  <td><input type="text"   id="duration"   value=""></td><td>(sec)</td></tr>
     <tr><td>Colour</td>    <td><input type="color"  id="colour"     value=""></td></tr>
@@ -189,7 +191,6 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
       <input type="button" id="blue" style="background-color:blue;"></input>
       <input type="button" id="white" style="background-color:white;"></input>
 
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript">
 
     jQuery.ajaxSetup({async:false});
