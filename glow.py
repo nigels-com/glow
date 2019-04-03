@@ -169,8 +169,8 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
 <!DOCTYPE html>
 <html>
 <head>
-<style>
-</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style></style>
   <title>GLOW</title>
 </head>
 <body>
