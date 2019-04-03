@@ -164,7 +164,7 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
   # GET glow logo
   @app.get('/logo.png')
   def logo():
-    return static_file('logo.png', mimetype='image/png')
+    return static_file('logo.png', root='./', mimetype='image/png')
 
   # GET UI page
   @app.get('/')
