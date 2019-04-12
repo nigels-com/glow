@@ -15,3 +15,7 @@ http://localhost:8080/
 ### Ubuntu/Raspbian
 
 `sudo apt install python-click python-webcolors python-bottle`
+
+## Notes
+
+How to disable the [LED lights](https://www.jeffgeerling.com/blogs/jeff-geerling/controlling-pwr-act-leds-raspberry-pi) on a Raspberry Pi.
