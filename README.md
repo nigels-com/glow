@@ -4,11 +4,17 @@ A Raspberry Pi command-line tool and service for glowing the Pimoroni Blinkt!
 
 ## Introduction
 
-[![glow.py](glow.jpg)](https://www.youtube.com/watch?v=tUi1ILAl58A)
+## Web User Interface
 
 http://localhost:8080/
 
 ![index.html](control.png)
+
+## Videos
+
+[![GLOW Video](video2.jpg)](https://www.youtube.com/watch?v=jpt5c_KMTl4)
+
+[![Minecraft Server Test #1](glow.jpg)](https://www.youtube.com/watch?v=tUi1ILAl58A)
 
 ## Installation
 
