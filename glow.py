@@ -110,16 +110,17 @@ class Glow:
 #
 
 @click.command()
-@click.option('-d', '--duration',            type=float, default=None,  help='Duration')
-@click.option(      '--min',                 type=float, default=None,  help='Minimum')
-@click.option(      '--max',                 type=float, default=None,  help='Maximum')
-@click.option('-b', '--brightness',          type=float, default=None,  help='Brightness')
-@click.option('-p', '--power',               type=float, default=None,  help='Power')
-@click.option('-c', '--colour',     nargs=3, type=int,   default=None,  help='Colour')
-@click.option(      '--stone',      is_flag=True,        default=False, help='Stone Mode')
-@click.option(      '--emerald',    is_flag=True,        default=False, help='Emerald Mode')
-@click.option(      '--redstone',   is_flag=True,        default=False, help='Redstone Mode')
-def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone):
+@click.option('-r', '--root',                            default='glow', help='Root web folder')
+@click.option('-d', '--duration',            type=float, default=None,   help='Duration')
+@click.option(      '--min',                 type=float, default=None,   help='Minimum')
+@click.option(      '--max',                 type=float, default=None,   help='Maximum')
+@click.option('-b', '--brightness',          type=float, default=None,   help='Brightness')
+@click.option('-p', '--power',               type=float, default=None,   help='Power')
+@click.option('-c', '--colour',     nargs=3, type=int,   default=None,   help='Colour')
+@click.option(      '--stone',      is_flag=True,        default=False,  help='Stone Mode')
+@click.option(      '--emerald',    is_flag=True,        default=False,  help='Emerald Mode')
+@click.option(      '--redstone',   is_flag=True,        default=False,  help='Redstone Mode')
+def cli(root, duration, min, max, brightness, power, colour, stone, emerald, redstone):
   glow = Glow()
   if stone:
     glow.colour = [192, 192, 102]
@@ -155,78 +156,24 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
 
   app = Bottle()
 
+  @app.get('/glow.png')
+  def glow():
+    return static_file('glow.png', root=root, mimetype='image/png')
+
+  @app.get('/jquery.min.js')
+  def glow():
+    return static_file('jquery.min.js', root=root, mimetype='text/javascript')
+
+  @app.get('/')
+  @app.get('/index.html')
+  def index():
+    return static_file('index.html', root=root, mimetype='text/html')
+
   # GET glow state as JSON
   @app.get('/glow.json')
   def status():
     with lock:
       return '%s\n'%(glow.toJson())
-
-  # GET glow logo
-  @app.get('/logo.png')
-  def logo():
-    return static_file('logo.png', root='./', mimetype='image/png')
-
-  # GET UI page
-  @app.get('/')
-  @app.get('/index.html')
-  def index():
-    return '''
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style></style>
-  <title>GLOW</title>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-</head>
-<body>
-  <img src="logo.png"/>
-  <table>
-    <tr><td>Duration</td>  <td><input type="text"   id="duration"   value=""></td><td>(sec)</td></tr>
-    <tr><td>Colour</td>    <td><input type="color"  id="colour"     value=""></td></tr>
-    <tr><td>Brightness</td><td><input type="text"   id="brightness" value=""></td><td>[0.0,1.0]</td></tr>
-    <tr><td>Power</td>     <td><input type="text"   id="power"      value=""></td><td>&gt;0.0</td></tr>
-    <tr><td>Min</td>       <td><input type="text"   id="min"        value=""></td><td>[0.0,1.0]</td></tr>
-    <tr><td>Max</td>       <td><input type="text"   id="max"        value=""></td><td>[0.0,1.0]</td></tr>
-  </table>
-  <br>
-      <input type="button" id="black" style="background-color:black;"></input>
-      <input type="button" id="red" style="background-color:red;"></input>
-      <input type="button" id="green" style="background-color:green;"></input>
-      <input type="button" id="blue" style="background-color:blue;"></input>
-      <input type="button" id="white" style="background-color:white;"></input>
-
-  <script type="text/javascript">
-
-    jQuery.ajaxSetup({async:false});
-    $.getJSON( "/glow.json", {}, function( data ) {
-        $("#duration").val(data.duration);
-        $("#colour").val(data.colour);
-        $("#brightness").val(data.brightness);
-        $("#power").val(data.power);
-        $("#min").val(data.min);
-        $("#max").val(data.max);
-    });
-    jQuery.ajaxSetup({async:true});
-
-    $(document).ready(function(){
-        $("#duration")  .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ duration: this.value })); });
-        $("#colour")    .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: this.value })); });
-        $("#brightness").change(function(){ if (this.value.length) $.post("/", JSON.stringify({ brightness: this.value })); });
-        $("#power")     .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ power: this.value })); });
-        $("#min")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ min: this.value })); });
-        $("#max")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ max: this.value })); });
-
-        $("#black")     .click(function(){ $.post("/", JSON.stringify({ colour: "#000" })); });
-        $("#red")       .click(function(){ $.post("/", JSON.stringify({ colour: "#f00" })); });
-        $("#green")     .click(function(){ $.post("/", JSON.stringify({ colour: "#0f0" })); });
-        $("#blue")      .click(function(){ $.post("/", JSON.stringify({ colour: "#00f" })); });
-        $("#white")     .click(function(){ $.post("/", JSON.stringify({ colour: "#fff" })); });
-    });
-</script>
-</body>
-</html>
-'''
 
   # POST glow state as JSON
   @app.post('/')
@@ -252,4 +199,3 @@ def cli(duration, min, max, brightness, power, colour, stone, emerald, redstone)
 if __name__ == '__main__':
   blinkt.set_clear_on_exit()
   cli()
-

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style></style>
+  <title>GLOW</title>
+  <script type="text/javascript" src="jquery.min.js"></script>
+</head>
+<body>
+  <img src="glow.png"/>
+  <table>
+    <tr><td>Duration</td>  <td><input type="text"   id="duration"   value=""></td><td>(sec)</td></tr>
+    <tr><td>Colour</td>    <td><input type="color"  id="colour"     value=""></td></tr>
+    <tr><td>Brightness</td><td><input type="text"   id="brightness" value=""></td><td>[0.0,1.0]</td></tr>
+    <tr><td>Power</td>     <td><input type="text"   id="power"      value=""></td><td>&gt;0.0</td></tr>
+    <tr><td>Min</td>       <td><input type="text"   id="min"        value=""></td><td>[0.0,1.0]</td></tr>
+    <tr><td>Max</td>       <td><input type="text"   id="max"        value=""></td><td>[0.0,1.0]</td></tr>
+  </table>
+  <br>
+      <input type="button" id="black" style="background-color:black;"></input>
+      <input type="button" id="red" style="background-color:red;"></input>
+      <input type="button" id="green" style="background-color:green;"></input>
+      <input type="button" id="blue" style="background-color:blue;"></input>
+      <input type="button" id="white" style="background-color:white;"></input>
+
+  <script type="text/javascript">
+
+    jQuery.ajaxSetup({async:false});
+    $.getJSON( "/glow.json", {}, function( data ) {
+        $("#duration").val(data.duration);
+        $("#colour").val(data.colour);
+        $("#brightness").val(data.brightness);
+        $("#power").val(data.power);
+        $("#min").val(data.min);
+        $("#max").val(data.max);
+    });
+    jQuery.ajaxSetup({async:true});
+
+    $(document).ready(function(){
+        $("#duration")  .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ duration: this.value })); });
+        $("#colour")    .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: this.value })); });
+        $("#brightness").change(function(){ if (this.value.length) $.post("/", JSON.stringify({ brightness: this.value })); });
+        $("#power")     .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ power: this.value })); });
+        $("#min")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ min: this.value })); });
+        $("#max")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ max: this.value })); });
+
+        $("#black")     .click(function(){ $.post("/", JSON.stringify({ colour: "#000" })); });
+        $("#red")       .click(function(){ $.post("/", JSON.stringify({ colour: "#f00" })); });
+        $("#green")     .click(function(){ $.post("/", JSON.stringify({ colour: "#0f0" })); });
+        $("#blue")      .click(function(){ $.post("/", JSON.stringify({ colour: "#00f" })); });
+        $("#white")     .click(function(){ $.post("/", JSON.stringify({ colour: "#fff" })); });
+    });
+</script>
+</body>
+</html>
