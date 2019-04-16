@@ -157,11 +157,11 @@ def cli(root, duration, min, max, brightness, power, colour, stone, emerald, red
   app = Bottle()
 
   @app.get('/glow.png')
-  def glow():
+  def logo():
     return static_file('glow.png', root=root, mimetype='image/png')
 
   @app.get('/jquery.min.js')
-  def glow():
+  def jquery():
     return static_file('jquery.min.js', root=root, mimetype='text/javascript')
 
   @app.get('/')
