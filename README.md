@@ -23,6 +23,16 @@ Options:
   --help                   Show this message and exit.
 ```
 
+## REST API
+
+Set the colour to red, green or blue.
+
+```
+$ curl -X POST -d '{"colour":"#f00"}' http://localhost:8080/
+$ curl -X POST -d '{"colour":"#0f0"}' http://localhost:8080/
+$ curl -X POST -d '{"colour":"#00f"}' http://localhost:8080/
+```
+
 ## Web User Interface
 
 http://localhost:8080/
