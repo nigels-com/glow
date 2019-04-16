@@ -30,15 +30,18 @@
 
   <script type="text/javascript">
 
+    var get = function() {
+        $.getJSON( "/glow.json", {}, function(data) {
+          $("#duration").val(data.duration);
+          $("#colour").val(data.colour);
+          $("#brightness").val(data.brightness);
+          $("#power").val(data.power);
+          $("#min").val(data.min);
+          $("#max").val(data.max);
+      })};
+
     jQuery.ajaxSetup({async:false});
-    $.getJSON( "/glow.json", {}, function( data ) {
-        $("#duration").val(data.duration);
-        $("#colour").val(data.colour);
-        $("#brightness").val(data.brightness);
-        $("#power").val(data.power);
-        $("#min").val(data.min);
-        $("#max").val(data.max);
-    });
+    get();
     jQuery.ajaxSetup({async:true});
 
     $(document).ready(function(){
@@ -49,16 +52,16 @@
         $("#min")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ min: this.value })); });
         $("#max")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ max: this.value })); });
 
-        $("#black")     .click(function(){ $.post("/", JSON.stringify({ colour: "#000"    })); });
-        $("#red")       .click(function(){ $.post("/", JSON.stringify({ colour: "#f00"    })); });
-        $("#green")     .click(function(){ $.post("/", JSON.stringify({ colour: "#0f0"    })); });
-        $("#blue")      .click(function(){ $.post("/", JSON.stringify({ colour: "#00f"    })); });
-        $("#pink")      .click(function(){ $.post("/", JSON.stringify({ colour: "#FFC0CB" })); });
-        $("#purple")    .click(function(){ $.post("/", JSON.stringify({ colour: "#800080" })); });
-        $("#brown")     .click(function(){ $.post("/", JSON.stringify({ colour: "#A52A2A" })); });
-        $("#orange")    .click(function(){ $.post("/", JSON.stringify({ colour: "#FFA500" })); });
-        $("#gold")      .click(function(){ $.post("/", JSON.stringify({ colour: "#FFD700" })); });
-        $("#white")     .click(function(){ $.post("/", JSON.stringify({ colour: "#fff"    })); });
+        $("#black")     .click(function(){ $.post("/", JSON.stringify({ colour: "#000"    })); get(); });
+        $("#red")       .click(function(){ $.post("/", JSON.stringify({ colour: "#f00"    })); get(); });
+        $("#green")     .click(function(){ $.post("/", JSON.stringify({ colour: "#0f0"    })); get(); });
+        $("#blue")      .click(function(){ $.post("/", JSON.stringify({ colour: "#00f"    })); get(); });
+        $("#pink")      .click(function(){ $.post("/", JSON.stringify({ colour: "#FFC0CB" })); get(); });
+        $("#purple")    .click(function(){ $.post("/", JSON.stringify({ colour: "#800080" })); get(); });
+        $("#brown")     .click(function(){ $.post("/", JSON.stringify({ colour: "#A52A2A" })); get(); });
+        $("#orange")    .click(function(){ $.post("/", JSON.stringify({ colour: "#FFA500" })); get(); });
+        $("#gold")      .click(function(){ $.post("/", JSON.stringify({ colour: "#FFD700" })); get(); });
+        $("#white")     .click(function(){ $.post("/", JSON.stringify({ colour: "#fff"    })); get(); });
     });
 </script>
 </body>
