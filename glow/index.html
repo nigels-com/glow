@@ -17,11 +17,14 @@
     <tr><td>Max</td>       <td><input type="text"   id="max"        value=""></td><td>[0.0,1.0]</td></tr>
   </table>
   <br>
-      <input type="button" id="black" style="background-color:black;"></input>
-      <input type="button" id="red" style="background-color:red;"></input>
-      <input type="button" id="green" style="background-color:green;"></input>
-      <input type="button" id="blue" style="background-color:blue;"></input>
-      <input type="button" id="white" style="background-color:white;"></input>
+      <input type="button" id="black"  style="background-color:black;"></input>
+      <input type="button" id="red"    style="background-color:red;"></input>
+      <input type="button" id="green"  style="background-color:green;"></input>
+      <input type="button" id="blue"   style="background-color:blue;"></input>
+      <input type="button" id="pink"   style="background-color:pink;"></input>
+      <input type="button" id="purple" style="background-color:purple;"></input>
+      <input type="button" id="brown"  style="background-color:brown;"></input>
+      <input type="button" id="white"  style="background-color:white;"></input>
 
   <script type="text/javascript">
 
@@ -44,11 +47,14 @@
         $("#min")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ min: this.value })); });
         $("#max")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ max: this.value })); });
 
-        $("#black")     .click(function(){ $.post("/", JSON.stringify({ colour: "#000" })); });
-        $("#red")       .click(function(){ $.post("/", JSON.stringify({ colour: "#f00" })); });
-        $("#green")     .click(function(){ $.post("/", JSON.stringify({ colour: "#0f0" })); });
-        $("#blue")      .click(function(){ $.post("/", JSON.stringify({ colour: "#00f" })); });
-        $("#white")     .click(function(){ $.post("/", JSON.stringify({ colour: "#fff" })); });
+        $("#black")     .click(function(){ $.post("/", JSON.stringify({ colour: "#000"    })); });
+        $("#red")       .click(function(){ $.post("/", JSON.stringify({ colour: "#f00"    })); });
+        $("#green")     .click(function(){ $.post("/", JSON.stringify({ colour: "#0f0"    })); });
+        $("#blue")      .click(function(){ $.post("/", JSON.stringify({ colour: "#00f"    })); });
+        $("#pink")      .click(function(){ $.post("/", JSON.stringify({ colour: "#FFC0CB" })); });
+        $("#purple")    .click(function(){ $.post("/", JSON.stringify({ colour: "#800080" })); });
+        $("#brown")     .click(function(){ $.post("/", JSON.stringify({ colour: "#A52A2A" })); });
+        $("#white")     .click(function(){ $.post("/", JSON.stringify({ colour: "#fff"    })); });
     });
 </script>
 </body>
