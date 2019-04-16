@@ -24,6 +24,8 @@
       <input type="button" id="pink"   style="background-color:pink;"></input>
       <input type="button" id="purple" style="background-color:purple;"></input>
       <input type="button" id="brown"  style="background-color:brown;"></input>
+      <input type="button" id="orange" style="background-color:orange;"></input>
+      <input type="button" id="gold"   style="background-color:gold;"></input>
       <input type="button" id="white"  style="background-color:white;"></input>
 
   <script type="text/javascript">
@@ -54,6 +56,8 @@
         $("#pink")      .click(function(){ $.post("/", JSON.stringify({ colour: "#FFC0CB" })); });
         $("#purple")    .click(function(){ $.post("/", JSON.stringify({ colour: "#800080" })); });
         $("#brown")     .click(function(){ $.post("/", JSON.stringify({ colour: "#A52A2A" })); });
+        $("#orange")    .click(function(){ $.post("/", JSON.stringify({ colour: "#FFA500" })); });
+        $("#gold")      .click(function(){ $.post("/", JSON.stringify({ colour: "#FFD700" })); });
         $("#white")     .click(function(){ $.post("/", JSON.stringify({ colour: "#fff"    })); });
     });
 </script>
