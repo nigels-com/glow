@@ -1,22 +1,22 @@
 #!/usr/bin/env python
 
+#pylint: disable=bad-indentation,bad-whitespace
+
 import time
 import math
 import json
-import random
 import threading
 import logging
 
 import click
-import blinkt
 import webcolors
-from bottle import get, post, request, static_file, Bottle
+from bottle import request, static_file, Bottle
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='[%(levelname)s] (%(threadName)-10s) %(message)s',
-                    )
+import blinkt
 
-lock = threading.Lock()
+logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s')
+
+LOCK = threading.Lock()
 
 #
 # Worker thread for periodic update
@@ -34,7 +34,7 @@ class Thread(threading.Thread):
 
   def run(self):
     while True:
-      with lock:
+      with LOCK:
         delay = self.glow.delay
         self.glow.update()
       time.sleep(delay)
@@ -46,7 +46,7 @@ class Thread(threading.Thread):
 class Glow:
 
   def __init__(self):
-    self.startTime = time.time()
+    self.start_time = time.time()
     self.duration = 1.0
     self.colour = [192, 192, 255]
     self.brightness = 1.0
@@ -55,7 +55,7 @@ class Glow:
     self.max = 0.9
     self.delay = 0.1
 
-  def toJson(self):
+  def to_json(self):
     o = {}
     o["duration"] = self.duration
     o["colour"] = webcolors.rgb_to_hex((self.colour[0], self.colour[1], self.colour[2]))
@@ -66,8 +66,8 @@ class Glow:
     o["delay"] = self.delay
     return json.dumps(o)
 
-  def fromJson(self, str):
-    o = json.loads(str)
+  def from_json(self, j):
+    o = json.loads(j)
     if isinstance(o, dict):
       self.__dict__.update(o)
       if isinstance(self.duration, unicode):
@@ -88,7 +88,7 @@ class Glow:
 
   def update(self):
 
-    t = (time.time() - self.startTime)
+    t = (time.time() - self.start_time)
     u = (t%self.duration)/self.duration
 
     # Triangle wave from 0 to 1 to 0
@@ -175,20 +175,20 @@ def cli(root, duration, min, max, brightness, power, colour, stone, emerald, red
     response.set_header("Cache-Control", "public, max-age=60000")
     return response
 
-  # GET glow state as JSON
   @app.get('/glow.json')
-  def status():
-    with lock:
-      return '%s\n'%(glow.toJson())
+  def get():
+    ''' GET GLOW state as JSON '''
+    with LOCK:
+      return '%s\n'%(glow.to_json())
 
-  # POST glow state as JSON
   @app.post('/')
-  def status():
-    json = request.body.getvalue()
-    logging.debug('Request: %s'%(json))
+  def set():
+    ''' POST GLOW state as JSON '''
+    j = request.body.getvalue()
+    logging.debug('Request: %s'%(j))
     try:
-      with lock:
-        glow.fromJson(request.body.getvalue())
+      with LOCK:
+        glow.from_json(j)
     except:
      pass
 
