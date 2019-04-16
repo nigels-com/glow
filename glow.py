@@ -158,16 +158,22 @@ def cli(root, duration, min, max, brightness, power, colour, stone, emerald, red
 
   @app.get('/glow.png')
   def logo():
-    return static_file('glow.png', root=root, mimetype='image/png')
+    response = static_file('glow.png', root=root, mimetype='image/png')
+    response.set_header("Cache-Control", "public, max-age=60000")
+    return response
 
   @app.get('/jquery.min.js')
   def jquery():
-    return static_file('jquery.min.js', root=root, mimetype='text/javascript')
+    response = static_file('jquery.min.js', root=root, mimetype='text/javascript')
+    response.set_header("Cache-Control", "public, max-age=60000")
+    return response
 
   @app.get('/')
   @app.get('/index.html')
   def index():
-    return static_file('index.html', root=root, mimetype='text/html')
+    response = static_file('index.html', root=root, mimetype='text/html')
+    response.set_header("Cache-Control", "public, max-age=60000")
+    return response
 
   # GET glow state as JSON
   @app.get('/glow.json')
