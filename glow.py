@@ -5,6 +5,7 @@
 import time
 import math
 import json
+import copy
 import threading
 import logging
 
@@ -33,19 +34,26 @@ LOCK = threading.Lock()
 
 class Thread(threading.Thread):
 
-  def __init__(self, glow):
+  def __init__(self, app):
     threading.Thread.__init__(self)
     self.daemon = True
     logging.debug('Worker thread started')
-    self.glow = glow
+    self.app = app
     self.start()
 
   def run(self):
     while True:
       with LOCK:
-        delay = self.glow.delay
-        self.glow.update()
-      time.sleep(delay)
+        if len(self.app.glow):
+          j = 0;
+          for i in self.app.glow:
+            i.update(j, len(self.app.glow))
+            j = j+1
+          delay = self.app.glow[0].delay
+          self.app.glow[0].show()
+          time.sleep(delay)
+        else:
+          time.sleep(0.1)
 
 #
 # Glow state - colour, brightness, waveform
@@ -96,7 +104,7 @@ class Glow:
       if isinstance(self.delay, unicode):
         self.delay = float(self.delay)
 
-  def update(self):
+  def update(self, n, max):
 
     t = (time.time() - self.start_time)
     u = (t%self.duration)/self.duration
@@ -113,17 +121,20 @@ class Glow:
 
     if self.unicornhat:
       colour = [int(i) for i in colour]
-      self.unicornhat.set_all(colour[0], colour[1], colour[2])
+      for i in range(n, 64, max):
+        self.unicornhat.set_pixel(i%8, i/8, colour[0], colour[1], colour[2])
+
+    if self.blinkt:
+      for i in range(n, blinkt.NUM_PIXELS, max):
+        blinkt.set_pixel(i , colour[0], colour[1], colour[2])
+
+  def show(self):
+
+    if self.unicornhat:
       self.unicornhat.show()
 
     if self.blinkt:
-      for i in range(blinkt.NUM_PIXELS):
-        blinkt.set_pixel(i , colour[0], colour[1], colour[2])
       blinkt.show()
-
-#    for i in range(8):
-#      for j in range(8):
-#        unicornhat.set_pixel(i, j, colour[0], colour[1], colour[2])
 
 #
 # Glowing LEDs as a CLI or a service
@@ -137,10 +148,12 @@ class Glow:
 @click.option('-b', '--brightness',          type=float, default=None,   help='Brightness')
 @click.option('-p', '--power',               type=float, default=None,   help='Power')
 @click.option('-c', '--colour',     nargs=3, type=int,   default=None,   help='Colour')
+@click.option('-n', '--number',              type=int,   default=1,      help='Number of GLOW channels')
 @click.option(      '--stone',      is_flag=True,        default=False,  help='Stone Mode')
 @click.option(      '--emerald',    is_flag=True,        default=False,  help='Emerald Mode')
 @click.option(      '--redstone',   is_flag=True,        default=False,  help='Redstone Mode')
-def cli(root, duration, min, max, brightness, power, colour, stone, emerald, redstone):
+@click.option(      '--candle',     is_flag=True,        default=False,  help='Candle Mode')
+def cli(root, duration, min, max, brightness, power, colour, number, stone, emerald, redstone, candle):
 
   if blinkt:
     print('Pimoroni Blinkt support available.')
@@ -166,6 +179,12 @@ def cli(root, duration, min, max, brightness, power, colour, stone, emerald, red
     glow.min    = 1.0
     glow.max    = 1.0
     glow.brightness = 1.0
+  if candle:
+    glow.colour = [255, 180, 0]
+    glow.min    = 0.5
+    glow.max    = 0.9
+    glow.brightness = 1.0
+    glow.duration = 10.0
   if duration:
     glow.duration = duration
   if min:
@@ -178,8 +197,6 @@ def cli(root, duration, min, max, brightness, power, colour, stone, emerald, red
     glow.power = power
   if colour:
     glow.colour = colour
-
-  thread = Thread(glow)
 
   # HTTP REST API
 
@@ -208,7 +225,7 @@ def cli(root, duration, min, max, brightness, power, colour, stone, emerald, red
   def get():
     ''' GET GLOW state as JSON '''
     with LOCK:
-      return '%s\n'%(glow.to_json())
+      return '%s\n'%(app.glow[0].to_json())
 
   @app.post('/')
   def set():
@@ -217,11 +234,18 @@ def cli(root, duration, min, max, brightness, power, colour, stone, emerald, red
     logging.debug('Request: %s'%(j))
     try:
       with LOCK:
-        glow.from_json(j)
+        app.glow[0].from_json(j)
     except:
      pass
 
-  app.glow = glow
+  app.glow = [copy.copy(glow) for i in range(number)]
+  if candle:
+    d = app.glow[0].duration
+    for i in app.glow:
+      i.duration = d
+      d = d*0.45
+
+  thread = Thread(app)
 
   # Main event loop - list for HTTP traffic
   try:
