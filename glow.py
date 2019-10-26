@@ -12,7 +12,15 @@ import click
 import webcolors
 from bottle import request, static_file, Bottle
 
-import blinkt
+try:
+  import blinkt
+except:
+  pass
+
+try:
+  import unicornhat
+except:
+  pass
 
 logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s')
 
@@ -45,7 +53,9 @@ class Thread(threading.Thread):
 
 class Glow:
 
-  def __init__(self):
+  def __init__(self, blinkt, unicornhat):
+    self.blinkt = blinkt
+    self.unicornhat = unicornhat
     self.start_time = time.time()
     self.duration = 1.0
     self.colour = [192, 192, 255]
@@ -53,7 +63,7 @@ class Glow:
     self.power = 3.0
     self.min = 0.1
     self.max = 0.9
-    self.delay = 0.1
+    self.delay = 0.05
 
   def to_json(self):
     o = {}
@@ -101,9 +111,19 @@ class Glow:
 
     colour = [self.colour[0]*f, self.colour[1]*f, self.colour[2]*f]
 
-    for i in range(blinkt.NUM_PIXELS):
-      blinkt.set_pixel(i , colour[0], colour[1], colour[2])
-    blinkt.show()
+    if self.unicornhat:
+      colour = [int(i) for i in colour]
+      self.unicornhat.set_all(colour[0], colour[1], colour[2])
+      self.unicornhat.show()
+
+    if self.blinkt:
+      for i in range(blinkt.NUM_PIXELS):
+        blinkt.set_pixel(i , colour[0], colour[1], colour[2])
+      blinkt.show()
+
+#    for i in range(8):
+#      for j in range(8):
+#        unicornhat.set_pixel(i, j, colour[0], colour[1], colour[2])
 
 #
 # Glowing LEDs as a CLI or a service
@@ -121,7 +141,16 @@ class Glow:
 @click.option(      '--emerald',    is_flag=True,        default=False,  help='Emerald Mode')
 @click.option(      '--redstone',   is_flag=True,        default=False,  help='Redstone Mode')
 def cli(root, duration, min, max, brightness, power, colour, stone, emerald, redstone):
-  glow = Glow()
+
+  if blinkt:
+    print('Pimoroni Blinkt support available.')
+  shape = None
+  if unicornhat:
+    shape = unicornhat.get_shape()
+    unicornhat.brightness(1.0)
+    print('Pimoroni Unicorn Hat support available, shape is: %s,%s'%(shape))
+
+  glow = Glow(blinkt, unicornhat)
   if stone:
     glow.colour = [192, 192, 102]
     glow.min    = 0.3
@@ -198,8 +227,11 @@ def cli(root, duration, min, max, brightness, power, colour, stone, emerald, red
   try:
     app.run(host='0.0.0.0', port=8080)
   except:
-    blinkt.clear()
-    blinkt.show()
+    if blinkt:
+      blinkt.clear()
+      blinkt.show()
+    if unicornhat:
+      unicornhat.off()
 
 #
 if __name__ == '__main__':
