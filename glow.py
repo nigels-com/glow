@@ -43,6 +43,7 @@ class Thread(threading.Thread):
 
   def run(self):
     while True:
+      delay = 0.1
       with LOCK:
         if len(self.app.glow):
           j = 0;
@@ -51,9 +52,7 @@ class Thread(threading.Thread):
             j = j+1
           delay = self.app.glow[0].delay
           self.app.glow[0].show()
-          time.sleep(delay)
-        else:
-          time.sleep(0.1)
+      time.sleep(delay)
 
 #
 # Glow state - colour, brightness, waveform
@@ -148,7 +147,7 @@ class Glow:
 @click.option('-b', '--brightness',          type=float, default=None,   help='Brightness')
 @click.option('-p', '--power',               type=float, default=None,   help='Power')
 @click.option('-c', '--colour',     nargs=3, type=int,   default=None,   help='Colour')
-@click.option('-n', '--number',              type=int,   default=1,      help='Number of GLOW channels')
+@click.option('-n', '--number',              type=int,   default=1,      help='Number of channels')
 @click.option(      '--stone',      is_flag=True,        default=False,  help='Stone Mode')
 @click.option(      '--emerald',    is_flag=True,        default=False,  help='Emerald Mode')
 @click.option(      '--redstone',   is_flag=True,        default=False,  help='Redstone Mode')
@@ -184,7 +183,7 @@ def cli(root, duration, min, max, brightness, power, colour, number, stone, emer
     glow.min    = 0.5
     glow.max    = 0.9
     glow.brightness = 1.0
-    glow.duration = 10.0
+    glow.duration = 20.0
   if duration:
     glow.duration = duration
   if min:
@@ -222,19 +221,21 @@ def cli(root, duration, min, max, brightness, power, colour, number, stone, emer
     return response
 
   @app.get('/glow.json')
-  def get():
+  @app.get('/<n>/glow.json')
+  def get(n=0):
     ''' GET GLOW state as JSON '''
     with LOCK:
-      return '%s\n'%(app.glow[0].to_json())
+      return '%s\n'%(app.glow[int(n)].to_json())
 
   @app.post('/')
-  def set():
+  @app.post('/<n>')
+  def set(n=0):
     ''' POST GLOW state as JSON '''
     j = request.body.getvalue()
     logging.debug('Request: %s'%(j))
     try:
       with LOCK:
-        app.glow[0].from_json(j)
+        app.glow[int(n)].from_json(j)
     except:
      pass
 

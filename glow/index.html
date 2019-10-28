@@ -9,6 +9,14 @@
 <body>
   <img src="glow.png"/>
   <table>
+    <tr><td>Channel</td><td>
+    <select id="channel" style="width:300px;" value="0">
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+    </select>
+    </td></tr>
     <tr><td>Duration</td>  <td><input type="text"   id="duration"   style="width:300px;" value=""></td><td>(sec)</td></tr>
     <tr><td>Colour</td>    <td><input type="color"  id="colour"     style="width:300px;" value=""></td></tr>
     <tr><td></td><td>
@@ -34,9 +42,11 @@
   <div style="font-size:70%"><a href="https://github.com/nigels-com/glow">nigels-com/glow</a></div>
 
   <script type="text/javascript">
+    var channel = 0;
+    $("#channel").val(channel);
 
     var get = function() {
-        $.getJSON( "/glow.json", {}, function(data) {
+        $.getJSON( `/${channel}/glow.json`, {}, function(data) {
           $("#duration").val(data.duration);
           $("#colour").val(data.colour);
           $("#brightness").val(data.brightness*100);
@@ -50,23 +60,24 @@
     jQuery.ajaxSetup({async:true});
 
     $(document).ready(function(){
-        $("#duration")  .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ duration: this.value })); });
-        $("#colour")    .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ colour: this.value })); });
-        $("#brightness").change(function(){ if (this.value.length) $.post("/", JSON.stringify({ brightness: this.value/100.0 })); });
-        $("#power")     .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ power: this.value })); });
-        $("#min")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ min: this.value/100.0 })); });
-        $("#max")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ max: this.value/100.0 })); });
+        $("#channel")   .change(function(){ if (this.value.length) channel = this.value; jQuery.ajaxSetup({async:false}); get(); jQuery.ajaxSetup({async:true}); });
+        $("#duration")  .change(function(){ if (this.value.length) $.post(`/${channel}`, JSON.stringify({ duration: this.value })); });
+        $("#colour")    .change(function(){ if (this.value.length) $.post(`/${channel}`, JSON.stringify({ colour: this.value })); });
+        $("#brightness").change(function(){ if (this.value.length) $.post(`/${channel}`, JSON.stringify({ brightness: this.value/100.0 })); });
+        $("#power")     .change(function(){ if (this.value.length) $.post(`/${channel}`, JSON.stringify({ power: this.value })); });
+        $("#min")       .change(function(){ if (this.value.length) $.post(`/${channel}`, JSON.stringify({ min: this.value/100.0 })); });
+        $("#max")       .change(function(){ if (this.value.length) $.post(`/${channel}`, JSON.stringify({ max: this.value/100.0 })); });
 
-        $("#black")     .click(function(){ $.post("/", JSON.stringify({ colour: "#000"    })); get(); });
-        $("#red")       .click(function(){ $.post("/", JSON.stringify({ colour: "#f00"    })); get(); });
-        $("#green")     .click(function(){ $.post("/", JSON.stringify({ colour: "#0f0"    })); get(); });
-        $("#blue")      .click(function(){ $.post("/", JSON.stringify({ colour: "#00f"    })); get(); });
-        $("#pink")      .click(function(){ $.post("/", JSON.stringify({ colour: "#FFC0CB" })); get(); });
-        $("#purple")    .click(function(){ $.post("/", JSON.stringify({ colour: "#800080" })); get(); });
-        $("#brown")     .click(function(){ $.post("/", JSON.stringify({ colour: "#A52A2A" })); get(); });
-        $("#orange")    .click(function(){ $.post("/", JSON.stringify({ colour: "#FFA500" })); get(); });
-        $("#gold")      .click(function(){ $.post("/", JSON.stringify({ colour: "#FFD700" })); get(); });
-        $("#white")     .click(function(){ $.post("/", JSON.stringify({ colour: "#fff"    })); get(); });
+        $("#black")     .click(function(){ $.post(`/${channel}`, JSON.stringify({ colour: "#000"    })); get(); });
+        $("#red")       .click(function(){ $.post(`/${channel}`, JSON.stringify({ colour: "#f00"    })); get(); });
+        $("#green")     .click(function(){ $.post(`/${channel}`, JSON.stringify({ colour: "#0f0"    })); get(); });
+        $("#blue")      .click(function(){ $.post(`/${channel}`, JSON.stringify({ colour: "#00f"    })); get(); });
+        $("#pink")      .click(function(){ $.post(`/${channel}`, JSON.stringify({ colour: "#FFC0CB" })); get(); });
+        $("#purple")    .click(function(){ $.post(`/${channel}`, JSON.stringify({ colour: "#800080" })); get(); });
+        $("#brown")     .click(function(){ $.post(`/${channel}`, JSON.stringify({ colour: "#A52A2A" })); get(); });
+        $("#orange")    .click(function(){ $.post(`/${channel}`, JSON.stringify({ colour: "#FFA500" })); get(); });
+        $("#gold")      .click(function(){ $.post(`/${channel}`, JSON.stringify({ colour: "#FFD700" })); get(); });
+        $("#white")     .click(function(){ $.post(`/${channel}`, JSON.stringify({ colour: "#fff"    })); get(); });
     });
 </script>
 </body>
