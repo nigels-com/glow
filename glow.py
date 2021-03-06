@@ -9,7 +9,7 @@ import threading
 import logging
 
 import click
-import webcolors
+import webcolors # apt install python3-webcolors
 from bottle import request, static_file, Bottle
 
 import blinkt
@@ -117,9 +117,15 @@ class Glow:
 @click.option('-b', '--brightness',          type=float, default=None,   help='Brightness')
 @click.option('-p', '--power',               type=float, default=None,   help='Power')
 @click.option('-c', '--colour',     nargs=3, type=int,   default=None,   help='Colour')
+
 @click.option(      '--stone',      is_flag=True,        default=False,  help='Stone Mode')
 @click.option(      '--emerald',    is_flag=True,        default=False,  help='Emerald Mode')
 @click.option(      '--redstone',   is_flag=True,        default=False,  help='Redstone Mode')
+
+@click.option(      '--online',     is_flag=True,        default=False,  help='Machine online (white)')
+@click.option(      '--active',     is_flag=True,        default=False,  help='Machine active (yellow)')
+@click.option(      '--aquiring',   is_flag=True,        default=False,  help='Machine aquiring (red)')
+
 def cli(root, duration, min, max, brightness, power, colour, stone, emerald, redstone):
   glow = Glow()
   if stone:
@@ -149,6 +155,14 @@ def cli(root, duration, min, max, brightness, power, colour, stone, emerald, red
     glow.power = power
   if colour:
     glow.colour = colour
+
+  # http://localhost:8080/glow.json
+  if online:
+    glow.from_json('{"power": 2.0, "min": 0.39, "max": 0.9, "colour": "#0000ff", "brightness": 1.0, "delay": 0.05, "duration": 4.0}')
+  if active:
+    glow.from_json('{"power": 2.0, "min": 0.39, "max": 0.9, "colour": "#ffd700", "brightness": 1.0, "delay": 0.05, "duration": 1.0}')
+  if aquiring:
+    glow.from_json('{"power": 2.0, "min": 0.39, "max": 0.9, "colour": "#ff0000", "brightness": 1.0, "delay": 0.05, "duration": 1.0}')
 
   thread = Thread(glow)
 
