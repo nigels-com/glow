@@ -54,3 +54,20 @@ http://localhost:8080/
 ## Notes
 
 How to disable the [LED lights](https://www.jeffgeerling.com/blogs/jeff-geerling/controlling-pwr-act-leds-raspberry-pi) on a Raspberry Pi.
+
+## Raspberry Pi 3 Model B Plus
+
+config.txt
+
+```
+# Turn off Power LED
+dtparam=pwr_led_trigger=default-on
+dtparam=pwr_led_activelow=off
+# Turn off Activity LED
+dtparam=act_led_trigger=none
+dtparam=act_led_activelow=off
+# Turn off Ethernet ACT LED
+dtparam=eth_led0=14
+# Turn off Ethernet LNK LED
+dtparam=eth_led1=14
+```
