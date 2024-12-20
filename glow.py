@@ -14,8 +14,6 @@ from bottle import request, static_file, Bottle
 
 import blinkt
 
-logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s')
-
 LOCK = threading.Lock()
 
 #
@@ -123,11 +121,19 @@ class Glow:
 @click.option(      '--emerald',    is_flag=True,        default=False,  help='Emerald Mode')
 @click.option(      '--redstone',   is_flag=True,        default=False,  help='Redstone Mode')
 
-@click.option(      '--online',     is_flag=True,        default=False,  help='Machine online (white)')
+@click.option(      '--online',     is_flag=True,        default=False,  help='Machine online (blue)')
 @click.option(      '--active',     is_flag=True,        default=False,  help='Machine active (yellow)')
 @click.option(      '--aquiring',   is_flag=True,        default=False,  help='Machine aquiring (red)')
 
-def cli(root, duration, min, max, brightness, power, colour, stone, emerald, redstone, online, active, aquiring):
+@click.option('-v', '--verbose',    is_flag=True,        default=False,  help='Verbose logging')
+
+def cli(root, duration, min, max, brightness, power, colour, stone, emerald, redstone, online, active, aquiring, verbose):
+
+  if verbose:
+    logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s')
+  else:
+    logging.basicConfig(level=logging.INFO, format='[%(levelname)s] (%(threadName)-10s) %(message)s')
+
   glow = Glow()
   if stone:
     glow.colour = [192, 192, 102]
