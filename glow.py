@@ -113,9 +113,12 @@ class Glow:
     r = self.right * n
     for i in range(n):
       if i < l or i > r:
+        print(' ', end='')
         blinkt.set_pixel(i, 0, 0, 0)
       else:
+        print('X', end='')
         blinkt.set_pixel(i, colour[0], colour[1], colour[2])
+    print('')
     blinkt.show()
 
 #
