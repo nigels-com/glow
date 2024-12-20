@@ -61,7 +61,7 @@
         $("#min")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ min: this.value/100.0 })); });
         $("#max")       .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ max: this.value/100.0 })); });
         $("#left")      .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ left: this.value/100.0 })); });
-        $("#right")     .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ roght: this.value/100.0 })); });
+        $("#right")     .change(function(){ if (this.value.length) $.post("/", JSON.stringify({ right: this.value/100.0 })); });
 
         $("#black")     .click(function(){ $.post("/", JSON.stringify({ colour: "#000"    })); get(); });
         $("#red")       .click(function(){ $.post("/", JSON.stringify({ colour: "#f00"    })); get(); });
