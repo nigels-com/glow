@@ -12,8 +12,7 @@ import click     # apt install python3-click
 import webcolors # apt install python3-webcolors
 from bottle import request, static_file, Bottle
 
-#import blinkt
-import unicornhat
+import blinkt
 
 logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s')
 
@@ -102,15 +101,10 @@ class Glow:
 
     colour = [int(self.colour[0]*f), int(self.colour[1]*f), int(self.colour[2]*f)]
 
-#    logging.debug(f'update {blinkt.NUM_PIXELS} pixels')
-#    for i in range(blinkt.NUM_PIXELS):
-#      blinkt.set_pixel(i , colour[0], colour[1], colour[2])
-#    blinkt.show()
-
-    for i in range(0, 7):
-        for j in range(0, 7):
-            unicornhat.set_pixel(j, i, colour[0], colour[1], colour[2])
-    unicornhat.show()
+    logging.debug(f'update {blinkt.NUM_PIXELS} pixels')
+    for i in range(blinkt.NUM_PIXELS):
+      blinkt.set_pixel(i , colour[0], colour[1], colour[2])
+    blinkt.show()
 
 #
 # Glowing LEDs as a CLI or a service
@@ -219,11 +213,10 @@ def cli(root, duration, min, max, brightness, power, colour, stone, emerald, red
   try:
     app.run(host='0.0.0.0', port=8080)
   except:
-#    blinkt.clear()
-#    blinkt.show()
-    unicornhat.off()
+    blinkt.clear()
+    blinkt.show()
 
 #
 if __name__ == '__main__':
-#  blinkt.set_clear_on_exit()
+  blinkt.set_clear_on_exit()
   cli()
