@@ -114,12 +114,9 @@ class Glow:
     print(f'{l} {r}')
     for i in range(n):
       if i < l or i >= r:
-#        print(' ', end='')
         blinkt.set_pixel(i, 0, 0, 0)
       else:
-#        print('X', end='')
         blinkt.set_pixel(i, colour[0], colour[1], colour[2])
-#    print('')
     blinkt.show()
 
 #
@@ -131,6 +128,8 @@ class Glow:
 @click.option('-d', '--duration',            type=float, default=None,   help='Duration')
 @click.option(      '--min',                 type=float, default=None,   help='Minimum')
 @click.option(      '--max',                 type=float, default=None,   help='Maximum')
+@click.option(      '--left',                type=float, default=None,   help='Left')
+@click.option(      '--right',               type=float, default=None,   help='Right')
 @click.option('-b', '--brightness',          type=float, default=None,   help='Brightness')
 @click.option('-p', '--power',               type=float, default=None,   help='Power')
 @click.option('-c', '--colour',     nargs=3, type=int,   default=None,   help='Colour')
@@ -174,6 +173,10 @@ def cli(root, duration, min, max, brightness, power, colour, stone, emerald, red
     glow.min = min
   if max:
     glow.max = max
+  if left:
+    glow.left = left
+  if right:
+    glow.right = right
   if brightness:
     glow.brightness = brightness
   if power:
@@ -183,11 +186,11 @@ def cli(root, duration, min, max, brightness, power, colour, stone, emerald, red
 
   # http://localhost:8080/glow.json
   if online:
-    glow.from_json('{"power": 2.0, "min": 0.39, "max": 0.9, "colour": "#0000ff", "brightness": 1.0, "delay": 0.05, "duration": 4.0}')
+    glow.from_json('{"power": 2.0, "min": 0.39, "max": 0.9, "left": 0, "right": 1, "colour": "#0000ff", "brightness": 1.0, "delay": 0.05, "duration": 4.0}')
   if active:
-    glow.from_json('{"power": 2.0, "min": 0.39, "max": 0.9, "colour": "#ffd700", "brightness": 1.0, "delay": 0.05, "duration": 1.0}')
+    glow.from_json('{"power": 2.0, "min": 0.39, "max": 0.9, "left": 0, "right": 1, "colour": "#ffd700", "brightness": 1.0, "delay": 0.05, "duration": 1.0}')
   if aquiring:
-    glow.from_json('{"power": 2.0, "min": 0.39, "max": 0.9, "colour": "#ff0000", "brightness": 1.0, "delay": 0.05, "duration": 1.0}')
+    glow.from_json('{"power": 2.0, "min": 0.39, "max": 0.9, "left": 0, "right": 1, "colour": "#ff0000", "brightness": 1.0, "delay": 0.05, "duration": 1.0}')
 
   thread = Thread(glow)
 
