@@ -111,7 +111,7 @@ class Glow:
     n = blinkt.NUM_PIXELS
     l = self.left * n
     r = self.right * n
-    print(f'{l} {r}')
+#   logging.debug(f'{l} {r}')
     for i in range(n):
       if i < l or i >= r:
         blinkt.set_pixel(i, 0, 0, 0)
