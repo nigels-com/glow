@@ -8,11 +8,12 @@ import json
 import threading
 import logging
 
-import click
+import click     # apt install python3-click
 import webcolors # apt install python3-webcolors
 from bottle import request, static_file, Bottle
 
-import blinkt
+#import blinkt
+import unicornhat
 
 logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s')
 
@@ -70,20 +71,20 @@ class Glow:
     o = json.loads(j)
     if isinstance(o, dict):
       self.__dict__.update(o)
-      if isinstance(self.duration, unicode):
+      if isinstance(self.duration, str):
         self.duration = float(self.duration)
-      if isinstance(self.colour, unicode):
+      if isinstance(self.colour, str):
         rgb = webcolors.hex_to_rgb(self.colour)
         self.colour = [ rgb[0], rgb[1], rgb[2] ]
-      if isinstance(self.brightness, unicode):
+      if isinstance(self.brightness, str):
         self.brightness = float(self.brightness)
-      if isinstance(self.power, unicode):
+      if isinstance(self.power, str):
         self.power = float(self.power)
-      if isinstance(self.min, unicode):
+      if isinstance(self.min, str):
         self.min = float(self.min)
-      if isinstance(self.max, unicode):
+      if isinstance(self.max, str):
         self.max = float(self.max)
-      if isinstance(self.delay, unicode):
+      if isinstance(self.delay, str):
         self.delay = float(self.delay)
 
   def update(self):
@@ -99,11 +100,17 @@ class Glow:
     f = f*self.brightness
     f = self.min + (self.max-self.min)*f
 
-    colour = [self.colour[0]*f, self.colour[1]*f, self.colour[2]*f]
+    colour = [int(self.colour[0]*f), int(self.colour[1]*f), int(self.colour[2]*f)]
 
-    for i in range(blinkt.NUM_PIXELS):
-      blinkt.set_pixel(i , colour[0], colour[1], colour[2])
-    blinkt.show()
+#    logging.debug(f'update {blinkt.NUM_PIXELS} pixels')
+#    for i in range(blinkt.NUM_PIXELS):
+#      blinkt.set_pixel(i , colour[0], colour[1], colour[2])
+#    blinkt.show()
+
+    for i in range(0, 7):
+        for j in range(0, 7):
+            unicornhat.set_pixel(j, i, colour[0], colour[1], colour[2])
+    unicornhat.show()
 
 #
 # Glowing LEDs as a CLI or a service
@@ -126,7 +133,7 @@ class Glow:
 @click.option(      '--active',     is_flag=True,        default=False,  help='Machine active (yellow)')
 @click.option(      '--aquiring',   is_flag=True,        default=False,  help='Machine aquiring (red)')
 
-def cli(root, duration, min, max, brightness, power, colour, stone, emerald, redstone):
+def cli(root, duration, min, max, brightness, power, colour, stone, emerald, redstone, online, active, aquiring):
   glow = Glow()
   if stone:
     glow.colour = [192, 192, 102]
@@ -212,10 +219,11 @@ def cli(root, duration, min, max, brightness, power, colour, stone, emerald, red
   try:
     app.run(host='0.0.0.0', port=8080)
   except:
-    blinkt.clear()
-    blinkt.show()
+#    blinkt.clear()
+#    blinkt.show()
+    unicornhat.off()
 
 #
 if __name__ == '__main__':
-  blinkt.set_clear_on_exit()
+#  blinkt.set_clear_on_exit()
   cli()
