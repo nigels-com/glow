@@ -217,7 +217,7 @@ def cli(root, duration, min, max, brightness, power, colour, stone, emerald, red
 
   # Main event loop - list for HTTP traffic
   try:
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8080, debug=verbose)
   except:
     blinkt.clear()
     blinkt.show()
