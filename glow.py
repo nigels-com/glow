@@ -112,7 +112,7 @@ class Glow:
     l = self.left * n
     r = self.right * n
     for i in range(n):
-      if i < l or r > l:
+      if i < l or i > r:
         blinkt.set_pixel(i, 0, 0, 0)
       else:
         blinkt.set_pixel(i, colour[0], colour[1], colour[2])
