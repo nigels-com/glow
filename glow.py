@@ -52,6 +52,8 @@ class Glow:
     self.min = 0.1
     self.max = 0.9
     self.delay = 0.1
+    self.left = 0.0
+    self.tight = 1.0
 
   def to_json(self):
     o = {}
@@ -62,6 +64,8 @@ class Glow:
     o["min"] = self.min
     o["max"] = self.max
     o["delay"] = self.delay
+    o["left"] = self.left
+    o["right"] = self.right
     return json.dumps(o)
 
   def from_json(self, j):
@@ -83,6 +87,10 @@ class Glow:
         self.max = float(self.max)
       if isinstance(self.delay, str):
         self.delay = float(self.delay)
+      if isinstance(self.left, str):
+        self.left = float(self.left)
+      if isinstance(self.right, str):
+        self.right = float(self.right)
 
   def update(self):
 
@@ -99,9 +107,15 @@ class Glow:
 
     colour = [int(self.colour[0]*f), int(self.colour[1]*f), int(self.colour[2]*f)]
 
-    logging.debug(f'update {blinkt.NUM_PIXELS} pixels')
-    for i in range(blinkt.NUM_PIXELS):
-      blinkt.set_pixel(i , colour[0], colour[1], colour[2])
+#   logging.debug(f'update {blinkt.NUM_PIXELS} pixels')
+    n = blinkt.NUM_PIXELS
+    l = self.left * n
+    r = self.right * n
+    for i in range(n):
+      if i < l or r > l:
+        blinkt.set_pixel(i, 0, 0, 0)
+      else:
+        blinkt.set_pixel(i, colour[0], colour[1], colour[2])
     blinkt.show()
 
 #
