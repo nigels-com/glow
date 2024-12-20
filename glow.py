@@ -53,7 +53,7 @@ class Glow:
     self.max = 0.9
     self.delay = 0.1
     self.left = 0.0
-    self.tight = 1.0
+    self.right = 1.0
 
   def to_json(self):
     o = {}
