@@ -144,7 +144,7 @@ class Glow:
 
 @click.option('-v', '--verbose',    is_flag=True,        default=False,  help='Verbose logging')
 
-def cli(root, duration, min, max, brightness, power, colour, stone, emerald, redstone, online, active, aquiring, verbose):
+def cli(root, duration, min, max, left, right, brightness, power, colour, stone, emerald, redstone, online, active, aquiring, verbose):
 
   if verbose:
     logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s')
@@ -186,11 +186,11 @@ def cli(root, duration, min, max, brightness, power, colour, stone, emerald, red
 
   # http://localhost:8080/glow.json
   if online:
-    glow.from_json('{"power": 2.0, "min": 0.39, "max": 0.9, "left": 0, "right": 1, "colour": "#0000ff", "brightness": 1.0, "delay": 0.05, "duration": 4.0}')
+    glow.from_json('{"power": 2.0, "min": 0.39, "max": 0.9, "colour": "#0000ff", "brightness": 1.0, "delay": 0.05, "duration": 4.0}')
   if active:
-    glow.from_json('{"power": 2.0, "min": 0.39, "max": 0.9, "left": 0, "right": 1, "colour": "#ffd700", "brightness": 1.0, "delay": 0.05, "duration": 1.0}')
+    glow.from_json('{"power": 2.0, "min": 0.39, "max": 0.9, "colour": "#ffd700", "brightness": 1.0, "delay": 0.05, "duration": 1.0}')
   if aquiring:
-    glow.from_json('{"power": 2.0, "min": 0.39, "max": 0.9, "left": 0, "right": 1, "colour": "#ff0000", "brightness": 1.0, "delay": 0.05, "duration": 1.0}')
+    glow.from_json('{"power": 2.0, "min": 0.39, "max": 0.9, "colour": "#ff0000", "brightness": 1.0, "delay": 0.05, "duration": 1.0}')
 
   thread = Thread(glow)
 
